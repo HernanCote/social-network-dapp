@@ -4211,12 +4211,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0xA5Ed31f693eB3c3e615b4ceD3331fFBFab4c4A7b",
-      "transactionHash": "0xf7609a0efdd8b3e0ef04c8fe2366d4b4f7bcb80d9492fa3cfda674617e1c85a8"
+      "address": "0xD67334e6Bc12a57Cc56Db4D89cC9f4BF76680f08",
+      "transactionHash": "0xb3ceaa696c08dc2089b5ffd89f557d2999a1f5eb73b9b16640d13fdf9f7f0074"
     }
   },
   "schemaVersion": "3.0.2",
-  "updatedAt": "2020-01-20T16:28:36.348Z",
+  "updatedAt": "2020-01-29T20:15:54.688Z",
   "devdoc": {
     "methods": {}
   },
