@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import Web3 from 'web3';
 
 import SocialNetwork from './abis/SocialNetwork.json';
-import Navbar, { createIdenticonSrc } from './components/Navbar';
-
-import { toEther } from './utils';
+import Navbar from './components/Navbar';
+import Main from './components/Main';
 
 import './App.css';
 
@@ -15,6 +14,7 @@ class App extends Component {
     socialNetwork: {},
     postCount: 0,
     posts: [],
+    isLoading: true,
   };
 
   async componentWillMount() {
@@ -22,7 +22,7 @@ class App extends Component {
     await this.loadBlockchainData();
   }
 
-  async loadWeb3() {
+  loadWeb3 = async () => {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
       await window.ethereum.enable();
@@ -35,7 +35,7 @@ class App extends Component {
     }
   }
 
-  async loadBlockchainData() {
+  loadBlockchainData = async () => {
     const web3 = window.web3;
     //load account
     const accounts = await web3.eth.getAccounts();
@@ -56,57 +56,61 @@ class App extends Component {
           const post = await socialNetwork.methods.posts(i).call();
           this.setState({ posts: [...this.state.posts, post] })
         }
-        console.log(this.state.posts);
+
+        this.setState({
+          posts: this.state.posts.sort((a, b) => b.tipAmount - a.tipAmount),
+        })
       }
       catch (err) {
         console.log(err);
+      }
+      finally {
+        this.setState({ isLoading: false });
       }
     }
     else {
       window.alert('Contract not deployed to the blockchain');
     }
-    // Address
-    // ABI
+  }
 
+  createPost = (content) => {
+    this.setState({ isLoading: true })
+    const { socialNetwork, account } = this.state;
+    socialNetwork.methods.createPost(content)
+      .send({ from: account })
+      .on('receipt', receipt =>
+        this.setState({ isLoading: false })
+      );
+  }
+
+  tipPost = (id, tipAmount) => {
+    const { socialNetwork, account } = this.state;
+    this.setState({ isLoading: true });
+    socialNetwork.methods.tipPost(id)
+      .send({ from: account, value: tipAmount })
+      .on('receipt', receipt =>
+        this.setState({ isLoading: false })
+      );
   }
 
   render() {
-    const { account, posts } = this.state;
+    const { account, posts, isLoading } = this.state;
     return (
-      <div>
+      <>
         <Navbar account={account} />
-        <div className="container-fluid mt-5">
-          <div className="row">
-            <main role="main" className="col-lg-12 ml-auto mr-auto" style={{ maxWidth: '32rem' }}>
-              <div className="content mr-auto ml-auto">
-                {posts.map((post, idx) => (
-                  <div className="card mb-4" key={idx}>
-                    <div className="card-header">
-                      <img
-                        alt="user"
-                        className="mr-2"
-                        width="30"
-                        height="30"
-                        src={createIdenticonSrc(account)}
-                      />
-                      <small className="text-muted">{post.author}</small>
-                    </div>
-                    <ul id="postList" className="list-group list-group-flush">
-                      <li className="list-group-item">
-                        <p>{post.content}</p>
-                      </li>
-                      <li className="list-group-item py-2">
-                        <small className="float-left mt-1 text-muted">TIPS: {toEther(post.tipAmount)} ETH</small>
-                        <button className="btn btn-link btn-sm float-right pt-0"><span>TIP 0.1 ETH</span></button>
-                      </li>
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </main>
+        {isLoading && (
+          <div className="text-center mt-5">
+            <p>Loading data</p>
           </div>
-        </div>
-      </div>
+        )}
+        {!isLoading && (
+          <Main
+            posts={posts}
+            createPost={this.createPost}
+            tipPost={this.tipPost}
+          />
+        )}
+      </>
     );
   }
 }

@@ -2,27 +2,27 @@ pragma solidity ^0.5.0;
 
 contract SocialNetwork {
     string public name;
-    uint public postCount = 0;
-    mapping(uint => Post) public posts;
+    uint256 public postCount = 0;
+    mapping(uint256 => Post) public posts;
 
     struct Post {
-        uint id;
+        uint256 id;
         string content;
-        uint tipAmount;
+        uint256 tipAmount;
         address payable author;
     }
 
     event PostCreated(
-        uint id,
+        uint256 id,
         string content,
-        uint tipAmount,
+        uint256 tipAmount,
         address author
     );
 
     event PostTipped(
-        uint id,
+        uint256 id,
         string content,
-        uint tipAmount,
+        uint256 tipAmount,
         address payable author
     );
 
@@ -37,8 +37,8 @@ contract SocialNetwork {
         emit PostCreated(postCount, _content, 0, msg.sender);
     }
 
-    function tipPost(uint _id) public payable {
-        require(_id > 0 && _id <= postCount, 'id not found');
+    function tipPost(uint256 _id) public payable {
+        require(_id > 0 && _id <= postCount, "id not found");
         // fetch the post
         Post memory _post = posts[_id];
         // fetch the author
@@ -50,6 +50,6 @@ contract SocialNetwork {
         // update the post
         posts[_id] = _post;
         // trigger event
-        emit PostCreated(postCount, _post.content, _post.tipAmount, _author);
+        emit PostTipped(postCount, _post.content, _post.tipAmount, _author);
     }
 }

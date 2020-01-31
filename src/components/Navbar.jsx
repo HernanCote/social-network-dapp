@@ -1,24 +1,18 @@
 import React from 'react';
-import Identicon from 'identicon.js';
-
-
-const createIdenticonSrc = (account) => {
-    return `data:image/png;base64,${new Identicon(account, 30).toString()}`;
-}
+import { createIdenticonSrc } from '../utils';
 
 const Navbar = ({
     className,
     account
 }) => (
         <nav className={`${className} navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow`}>
-            <a
+            <div
                 className="navbar-brand col-sm-3 col-md-2 mr-0"
-                href="http://www.dappuniversity.com/bootcamp"
                 target="_blank"
                 rel="noopener noreferrer"
             >
-                Dapp University
-            </a>
+                DApp Social Network
+            </div>
             <ul className="navbar-nav px-3">
                 <li className="nav-item text-nowrap d-none d-sm-none d-sm-block">
                     <small className="text-secondary">
@@ -39,7 +33,3 @@ const Navbar = ({
     );
 
 export default Navbar;
-
-export {
-    createIdenticonSrc,
-};
