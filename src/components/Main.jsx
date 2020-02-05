@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { createIdenticonSrc, toEther } from '../utils';
+
+import PostList from './PostList';
+import Form from './Form';
 
 
 
@@ -32,47 +34,14 @@ const Main = ({
             <div className="row">
                 <main role="main" className="col-lg-12 ml-auto mr-auto" style={{ maxWidth: '32rem' }}>
                     <div className="content mr-auto ml-auto">
-                        <form className="mb-5 mt-4" onSubmit={handleSubmit}>
-                            <div className="form-group mr-sm-2">
-                                <input
-                                    id="postContent"
-                                    type="text"
-                                    className="form-control"
-                                    placeholder="What's on your mind?"
-                                    required
-                                    onChange={handleInputChange} />
-                                <button type="submit" className="btn btn-primary btn-block">Share</button>
-                            </div>
-                        </form>
-                        {posts.map((post, idx) => (
-                            <div className="card mb-4" key={idx}>
-                                <div className="card-header">
-                                    <img
-                                        alt="user"
-                                        className="mr-2"
-                                        width="30"
-                                        height="30"
-                                        src={createIdenticonSrc(post.author)}
-                                    />
-                                    <small className="text-muted">{post.author}</small>
-                                </div>
-                                <ul id="postList" className="list-group list-group-flush">
-                                    <li className="list-group-item">
-                                        <p>{post.content}</p>
-                                    </li>
-                                    <li className="list-group-item py-2">
-                                        <small className="float-left mt-1 text-muted">TIPS: {toEther(post.tipAmount)} ETH</small>
-                                        <button
-                                            className="btn btn-link btn-sm float-right pt-0"
-                                            onClick={handleTipPost}
-                                            name={post.id}
-                                        >
-                                            TIP 0.1 ETH
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
-                        ))}
+                        <Form
+                            handleSubmit={handleSubmit}
+                            handleInputChange={handleInputChange}
+                        />
+                        <PostList
+                            posts={posts}
+                            handleTipPost={handleTipPost}
+                        />
                     </div>
                 </main>
             </div>
