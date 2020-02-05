@@ -43,8 +43,6 @@ class App extends Component {
     // Network ID
     const networkId = await web3.eth.net.getId();
     const networkData = SocialNetwork.networks[networkId];
-    console.log(networkData);
-    console.log(networkId);
 
     if (networkId) {
       try {
@@ -54,7 +52,7 @@ class App extends Component {
         this.setState({ postCount });
 
         // load post
-        for (let i = 0; i <= postCount; i++) {
+        for (let i = 1; i <= postCount; i++) {
           const post = await socialNetwork.methods.posts(i).call();
           this.setState({ posts: [...this.state.posts, post] })
         }
